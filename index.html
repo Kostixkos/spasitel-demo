@@ -24,9 +24,12 @@ body.leaving #face,body.leaving #hint{opacity:0;transition:opacity .18s ease}
 #c{position:fixed;inset:0;width:100%;height:100%;z-index:1}
 body:not([data-v=home]) #c{display:none}
 #home.on{position:fixed;inset:0;z-index:2;pointer-events:none}
-#face{position:absolute;left:50%;top:50%;width:var(--fs);transform:translate(-50%,-50%);-webkit-mask-image:radial-gradient(circle,#000 52%,transparent 70%);mask-image:radial-gradient(circle,#000 52%,transparent 70%);animation:br 7s ease-in-out infinite;transition:filter 1s}
+#face{position:absolute;left:50%;top:50%;width:var(--fs);transform:translate(-50%,-50%);-webkit-mask-image:radial-gradient(circle,#000 52%,transparent 70%);mask-image:radial-gradient(circle,#000 52%,transparent 70%);animation:br 7s ease-in-out infinite;opacity:0;transition:opacity 3.2s ease,filter 1s}
+body.ready #face{opacity:1}
+body.ready.leaving #face{opacity:0;transition:opacity .18s ease}
 body.menu #face{filter:brightness(1.18) contrast(1.05)}
 @keyframes br{50%{transform:translate(-50%,-50%) scale(1.025)}}
+body:not(.ready) #hint{opacity:0}
 #hint{position:absolute;bottom:calc(5vh + env(safe-area-inset-bottom,0px));width:100%;text-align:center;color:var(--dim);transition:opacity .6s}
 body.menu #hint{opacity:0}
 .sr{position:absolute;left:12px;bottom:12px;display:flex;gap:14px;pointer-events:auto;opacity:0}
@@ -355,6 +358,26 @@ function build(){
   const ord=[...P.keys()].sort(()=>rnd()-.5);P.forEach(p=>{p.ti=-1;p.r=iR*1.1+rnd()*Math.max(W,H)*.5});
   T.forEach((t,j)=>P[ord[j]].ti=j);
 }
+/* ---------- кометы на главном экране ---------- */
+const CM=[],RMQ=matchMedia('(prefers-reduced-motion:reduce)');let cmT=0;
+function cmSpawn(){const dir=rnd()<.5?1:-1,a=(16+rnd()*24)*Math.PI/180,sp=6+rnd()*5,top=rnd()<.7,
+  x=top?(dir>0?-W*.05+rnd()*W*.75:W*1.05-rnd()*W*.75):(dir>0?-30:W+30),y=top?-30:rnd()*H*.45;
+  CM.push({x,y,vx:dir*Math.cos(a)*sp,vy:Math.sin(a)*sp,len:130+rnd()*130,r:1.8+rnd()*1.2})}
+function comets(dt,s){if(RMQ.matches)return;
+  const rd=document.body.classList.contains('ready');
+  if(s>cmT&&CM.length<(rd?2:4)){cmSpawn();cmT=s+(rd?2+rnd()*3:.5+rnd())}
+  const k=(menu?.3:1)*(rd?.6:1);
+  for(let i=CM.length-1;i>=0;i--){const c=CM[i];c.x+=c.vx*dt;c.y+=c.vy*dt;
+    const sp=Math.hypot(c.vx,c.vy),ux=c.vx/sp,uy=c.vy/sp,tx=c.x-ux*c.len,ty=c.y-uy*c.len;
+    if((c.vx>0&&tx>W+20)||(c.vx<0&&tx<-20)||ty>H+20){CM.splice(i,1);continue}
+    const gap=9,n=Math.floor(c.len/gap);
+    for(let j=0;j<n;j++){const f=j/n,px=c.x-ux*j*gap,py=c.y-uy*j*gap;
+      if(px<-5||px>W+5||py<-5||py>H+5)continue;
+      ctx.globalAlpha=Math.pow(1-f,1.7)*.8*k;ctx.fillStyle=j<3?'#ffe3a3':'#fff';
+      ctx.beginPath();ctx.arc(px,py,Math.max(.5,c.r*(1-f*.8)),0,6.283);ctx.fill()}
+    ctx.globalAlpha=.16*k;ctx.fillStyle='#ffe3a3';ctx.beginPath();ctx.arc(c.x,c.y,c.r*5,0,6.283);ctx.fill();
+    ctx.globalAlpha=k;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(c.x,c.y,c.r*1.15,0,6.283);ctx.fill()}
+  ctx.globalAlpha=1}
 function frame(t){
   if(!run)return;requestAnimationFrame(frame);
   const dt=Math.min(2.5,(t-t0)/16.7||1);t0=t;const s=t/1000;
@@ -368,6 +391,7 @@ function frame(t){
     const k=1-Math.pow(1-p.s*(on?1.6:.6),dt);p.x+=(tx-p.x)*k;p.y+=(ty-p.y)*k;
     ctx.globalAlpha=al;ctx.fillStyle=fill;ctx.beginPath();ctx.arc(p.x,p.y,r,0,6.283);ctx.fill();
   }
+  comets(dt,s);
 }
 function sect(x,y){const dx=x-cx,dy=y-cy,d=Math.hypot(dx,dy);if(d<iR*.85||d>R*2.1)return -1;
   const g=Math.atan2(dy,dx)*180/Math.PI;let b=-1,bd=999;
@@ -649,7 +673,16 @@ const ENDS='иями ями ами его ого ему ому ыми ими е�
 const norm=s=>s.toLowerCase().replace(/ё/g,'е').replace(/ѣ/g,'е').replace(/[іїѵ]/g,'и').replace(/ѳ/g,'ф');
 function stem(w){if(w.length>5&&/(ся|сь)$/.test(w))w=w.slice(0,-2);for(const e of ENDS)if(w.endsWith(e)&&w.length-e.length>=3)return w.slice(0,-e.length);return w}
 function toks(s){return(norm(s).match(/[a-zа-я0-9]+/g)||[]).map(w=>w.replace(/ъ$/,'')).filter(w=>w.length>1&&!STOP.has(w)).map(stem)}
-const near=(w,t)=>w===t?1:((w.startsWith(t)&&t.length>=3)||(t.startsWith(w)&&w.length>=4))?.55:0;
+// Совпадение основ: точное, из списка родственных слов или (для длинных основ) с коротким хвостом.
+// Короткие основы («пост») совпадают только точно, поэтому «пост» не находит «постриг», «постель», «поставил».
+const SYNG=[['пост','поститься','постился','постимся','постящийся','постный','постная','постные','постом'],['молитва','молиться','молился','помолиться','молитвенный','помолись'],['прощение','прощать','простить','прощаю','прости','простил','прощен'],['исповедь','исповедовать','исповедоваться','исповедую'],['причастие','причащаться','причастить','причащение','причаститься'],['крещение','креститься','крестить','крестины','окрестить'],['брак','венчание','обвенчаться','супружество','супруги'],['воскресение','воскреснуть','воскрес','воскресший'],['смерть','умереть','умирать','кончина','умерший'],['грех','согрешить','грешить','грешный','грешник','согрешение'],['покаяние','каяться','покаяться','раскаяние'],['гнев','гневаться','разгневаться','гневливость','раздражение'],['осуждение','осуждать','осудить','судить'],['милостыня','милосердие','подаяние','нищий','нищие'],['дети','ребенок','воспитание','воспитывать','детей'],['страх','бояться','боязнь','испугаться'],['смирение','смиренный','смиряться','смиренномудрие'],['тревога','беспокойство','тревожиться','волнение'],['уныние','печаль','скорбь','скорби','тоска'],['вера','верить','верующий','веровать'],['сомнение','сомневаться','неверие'],['любовь','любить','возлюбить'],['враг','враги','недруг','ненависть'],['искушение','искушать','искусить'],['помысл','помыслы','мысли','мысль'],['гордость','гордыня','высокомерие','гордиться'],['зависть','завидовать'],['богатство','деньги','имущество','богатый','богатые'],['ложь','лгать','лукавство','обман'],['терпение','терпеть','долготерпение'],['совесть','совести']];
+const SYN=new Map();
+SYNG.forEach(g=>{const st=[...new Set(g.map(w=>stem(norm(w))))];st.forEach(a=>{const s=SYN.get(a)||new Set;st.forEach(b=>b!==a&&s.add(b));SYN.set(a,s)})});
+const near=(w,t)=>{if(w===t)return 1;const s=SYN.get(t);if(s&&s.has(w))return .8;
+  const a=w.length>t.length?w:t,b=w.length>t.length?t:w;
+  return b.length>=5&&a.startsWith(b)&&a.length-b.length<=3?.6:0};
+// сколько слов запроса должно найтись во фрагменте: для 1–2 слов — все, дальше — не менее 60%
+const need=n=>n<=2?n:Math.ceil(n*.6);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const hx=t=>[...t].slice(0,2).map(c=>c.codePointAt(0).toString(16)).join('_');
 function getJSON(u,store,key){if(!(key in store))store[key]=fetch(u).then(r=>r.ok?r.json():null).catch(()=>null);return store[key]}
@@ -1065,12 +1098,12 @@ async function ebSearch(q){const qs=[...new Set(toks(q))];if(!qs.length||!await 
     for(let j=0;j<P.length;j+=2){const c=P[j],tf=P[j+1];
       sc.set(c,(sc.get(c)||0)+w*idf*tf*(k1+1)/(tf+k1*(1-b+b*EB.len[c]/EB.avg)));
       let h=hit.get(c);if(!h)hit.set(c,h=new Set);h.add(t)}}
-  return[...sc].map(([c,s])=>[c,s*Math.pow(hit.get(c).size/qs.length,1.5)]).sort((x,y)=>y[1]-x[1]).slice(0,14)
+  return[...sc].filter(([c])=>hit.get(c).size>=need(qs.length)).map(([c,s])=>[c,s*Math.pow(hit.get(c).size/qs.length,1.5)]).sort((x,y)=>y[1]-x[1]).slice(0,14)
     .map(([c,s])=>{const r=EB.rows[c],d=EB.docs[r[0]];return{k:'fathers',a:d.a,b:d.t,l:r[1],x:r[2],p:0,s}})}
 
 function localSearch(q){const qs=[...new Set(toks(q))];if(!qs.length)return[];
-  return LOCAL.map(e=>{let s=0,h=0;for(const t of qs){let f=0;for(const w of e.tk)f+=near(w,t);if(f){h++;s+=f/(f+1.2)}}return{...e,s:s*Math.pow(h/qs.length,1.5)}})
-   .filter(e=>e.s>0).sort((a,b)=>b.s-a.s).slice(0,20)}
+  return LOCAL.map(e=>{let s=0,h=0;for(const t of qs){let f=0;for(const w of e.tk)f+=near(w,t);if(f){h++;s+=f/(f+1.2)}}return{...e,h,s:s*Math.pow(h/qs.length,1.5)}})
+   .filter(e=>e.s>0&&e.h>=need(qs.length)).sort((a,b)=>b.s-a.s).slice(0,20)}
 
 async function remote(q){
   const qs=[...new Set(toks(q))];if(!qs.length||!KB.m)return[];
@@ -1081,7 +1114,7 @@ async function remote(q){
       const P=sh[key],idf=Math.log(1+(m.N-P.length+.5)/(P.length+.5));
       for(const[c,tf,len]of P){sc.set(c,(sc.get(c)||0)+w*idf*tf*(k1+1)/(tf+k1*(1-b+b*len/m.avg)));
         if(!hit.has(c))hit.set(c,new Set);hit.get(c).add(t)}}});
-  const top=[...sc].map(([c,s])=>[c,s*Math.pow(hit.get(c).size/qs.length,1.5)]).sort((x,y)=>y[1]-x[1]).slice(0,12);
+  const top=[...sc].filter(([c])=>hit.get(c).size>=need(qs.length)).map(([c,s])=>[c,s*Math.pow(hit.get(c).size/qs.length,1.5)]).sort((x,y)=>y[1]-x[1]).slice(0,12);
   const files=[...new Set(top.map(([c])=>Math.floor(c/m.per)))];
   const blks=Object.fromEntries(await Promise.all(files.map(async f=>[f,await getJSON(`${KB.base}c/${f}.json`,KB.ch,f)])));
   return top.map(([c,s])=>{const blk=blks[Math.floor(c/m.per)],row=blk&&blk[c%m.per];if(!row)return null;
@@ -1140,7 +1173,11 @@ $('#flt').innerHTML=[['all','Всё'],['gospel','Евангелие'],['fathers'
 $('#flt').onclick=e=>{const b=e.target.closest('button');if(!b)return;flt=b.dataset.f;$$('#flt button').forEach(x=>x.classList.toggle('on',x===b));render(...last)};
 const ph=['С чего начать читать Евангелие?','Как молиться?','Что такое Троица?','Как простить обиду?','Как воспитывать детей?','Грешно ли бояться смерти?'];let pi=0;
 setInterval(()=>{if(document.activeElement!==$('#q'))$('#q').placeholder=ph[++pi%ph.length]},3200);
-search('');kbInit();route();setTimeout(()=>ebLoad(),2500);
+search('');kbInit();route();
+// лик появляется только после полной загрузки страницы и картинки; до этого летят кометы
+(async()=>{if(document.readyState!=='complete')await new Promise(r=>addEventListener('load',r,{once:true}));
+  try{await $('#face').decode()}catch(e){}
+  setTimeout(()=>document.body.classList.add('ready'),Math.max(400,2200-performance.now()))})();setTimeout(()=>ebLoad(),2500);
 </script>
 </body>
 </html>
