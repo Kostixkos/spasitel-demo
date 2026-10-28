@@ -323,8 +323,8 @@ h1,h2,h3,.bch{hyphens:auto;-webkit-hyphens:auto}
     <div id="ans"></div><div id="az"></div><script type="text/plain" id="azw">// Необязательный ретранслятор для Cloudflare Workers (бесплатный тариф подходит).
 // Зачем: браузер не разрешает странице читать azbyka.ru напрямую (CORS). Этот воркер
 // забирает страницу раздела «Вопросы и Ответы» и отдаёт её сайту с нужным разрешением.
-// Как подключить: создайте Worker, вставьте этот код, затем в index.html найдите
-//   own:''   и впишите  own:'https://ВАШ-ВОРКЕР.workers.dev/?url='
+// Как подключить: создайте Worker, вставьте этот код, скопируйте адрес воркера и вставьте его
+// на сайте: «Путь к Нему» → задайте вопрос → «Подключить свой ретранслятор» → «Сохранить».
 const CORS = { 'access-control-allow-origin': '*', 'vary': 'origin' };
 export default {
   async fetch(req) {
@@ -1060,12 +1060,12 @@ function paintAz(q,qs){const el=$('#az');if(!el)return;q=(q||'').trim();
   qs=qs||[...new Set(toks(q))];const head='<small class="ui">Ответы людей · Азбука веры (azbyka.ru)</small>';
   if(AZR.st==='wait'||AZR.st==='run'){el.innerHTML=`<section class="azb">${head}<p class="ai">Ищу на azbyka.ru ответы священников и мирян на ваш вопрос…</p></section>`;return}
   if(AZR.st==='off'){el.innerHTML=`<section class="azb">${head}<p class="ai">Прямо сейчас получить ответы с azbyka.ru не удалось: браузер или сеть не пропустили запрос.</p><a class="go" href="${azLink(q)}" target="_blank" rel="noopener">Искать этот вопрос на azbyka.ru →</a>${azSetup()}</section>`;fillAzSetup();return}
-  if(AZR.st==='none'){el.innerHTML=`<section class="azb">${head}<p class="ai">На azbyka.ru нет ответов, близких к этому вопросу.</p><a class="go" href="${azLink(q)}" target="_blank" rel="noopener">Искать на azbyka.ru самостоятельно →</a></section>`;return}
+  if(AZR.st==='none'){el.innerHTML=`<section class="azb">${head}<p class="ai">На azbyka.ru нет ответов, близких к этому вопросу.</p><a class="go" href="${azLink(q)}" target="_blank" rel="noopener">Искать на azbyka.ru самостоятельно →</a>${azSetup()}</section>`;fillAzSetup();return}
   const L=flt==='az'?AZR.items:AZR.items.slice(0,3);
   el.innerHTML=`<section class="azb">${head}<p class="ai">Так на этот вопрос отвечают священники и миряне на сайте «Азбука веры». Выбраны ответы, ближайшие к вашему вопросу.</p>
   ${L.map(z=>`<blockquote>${hl(esc(z.x),qs)}<cite><b>${esc(z.a)}</b> · вопрос «${esc(z.t)}» — <a href="${esc(z.u)}" target="_blank" rel="noopener">читать полностью на azbyka.ru →</a></cite></blockquote>`).join('')}
   <p class="an">Фрагменты приведены дословно с сайта azbyka.ru, права на тексты принадлежат авторам и порталу. Это ответы отдельных людей, а не официальная позиция Церкви; за личным ответом обратитесь к священнику.</p>
-  <a class="go" href="${azLink(q)}" target="_blank" rel="noopener">Все ответы по запросу на azbyka.ru →</a></section>`}
+  <a class="go" href="${azLink(q)}" target="_blank" rel="noopener">Все ответы по запросу на azbyka.ru →</a>${azSetup()}</section>`;fillAzSetup()}
 function render(list,q){last=[list,q];const qs=[...new Set(toks(q))];
   const dim=flt==='dim',L=dim?SMR.slice(SMN).map(z=>({k:'dim',x:z.x,d:z.d,n:z.n,_z:1})):list.filter(e=>flt==='all'||e.k===flt);shown=L.map(e=>({...e,_q:qs}));
   $('#ans').innerHTML=(flt==='all'||dim)?ansHTML(q,qs):'';paintLive(q);paintAz(q,qs);
@@ -1074,7 +1074,7 @@ function render(list,q){last=[list,q];const qs=[...new Set(toks(q))];
     if(e.k==='dim')return`<article class="card dm" data-i="${i}" style="animation-delay:${i*50}ms"><div class="cm ui"><span>${LBL.dim}</span></div><h3>${esc(smTitle(e.d))}</h3><p class="cx">${hl(esc(e.x),qs)}</p><cite><a href="${smHref(e.d,e.n)}" target="_blank" rel="noopener">${esc(smDate(e.d)||'Проповедь')} — читать полностью →</a></cite></article>`;
     const head=ttl(e,q),sub=e.k==='gospel'?(q.trim()?[e.b,e.l].filter(Boolean).join(' · '):''):e.k==='fathers'&&q.trim()?[e.b,e.l].filter(Boolean).join(' · '):e.l;
     return`<article class="card" data-i="${i}" tabindex="0" style="animation-delay:${i*50}ms"><div class="cm ui"><span>${LBL[e.k]}</span>${e.p?`<span>${PL[e.p]}</span>`:''}</div><h3>${lk(esc(head))}</h3><p class="cx">${hl(lk(esc(snip(e.x,qs))),qs)}</p>${sub?`<cite>${lk(esc(sub))}</cite>`:''}${e.x.length>360?'<span class="tog ui">Показать полностью</span>':''}</article>`}).join('')
-   :(dim&&SMR.length)||(flt==='az'&&q.trim())?'':`<div class="card"><h3>${dim&&!q.trim()?'Задайте вопрос выше':'Пока ничего не нашлось'}</h3><p>Попробуйте другими словами или спросите священника: иногда самый короткий путь — живой разговор.</p></div>`}
+   :(flt==='all'&&q.trim())||(dim&&SMR.length)?'':`<div class="card"><h3>${dim&&!q.trim()?'Задайте вопрос выше':'Пока ничего не нашлось'}</h3><p>Попробуйте другими словами или спросите священника: иногда самый короткий путь — живой разговор.</p></div>`}
 async function search(v,now){const my=++seq,q=v.trim();
   if(!q){SMR=[];LV={q:'',sm:'idle'};azKick('',my,1);return render(LOCAL.filter(e=>e.k==='faq').slice(0,6),'')}
   LV={q,sm:'run'};paintLive(q);azKick(q,my,now);
@@ -1093,7 +1093,7 @@ $('#go').onclick=()=>search($('#q').value,1);
 $('#res').addEventListener('click',e=>{if(e.target.closest('a'))return;const c=e.target.closest('.card[data-i]');if(!c)return;const it=shown[+c.dataset.i];if(!it||it.k==='dim'||it.x.length<=360)return;
   const open=c.classList.toggle('open');c.querySelector('.cx').innerHTML=hl(lk(esc(open?it.x:snip(it.x,it._q))),it._q);c.querySelector('.tog').textContent=open?'Свернуть':'Показать полностью'});
 $('#res').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('card'))e.target.click()});
-$('#flt').innerHTML=[['all','Всё'],['gospel','Евангелие'],['fathers','Святые отцы'],['dim','Отец Димитрий'],['az','Азбука веры'],['faq','Справка']].map(([k,t])=>`<button data-f="${k}" class="${k==='all'?'on':''}">${t}</button>`).join('');
+$('#flt').innerHTML=[['all','Всё'],['gospel','Евангелие'],['fathers','Святые отцы'],['dim','Отец Димитрий'],['faq','Справка']].map(([k,t])=>`<button data-f="${k}" class="${k==='all'?'on':''}">${t}</button>`).join('');
 $('#flt').onclick=e=>{const b=e.target.closest('button');if(!b)return;flt=b.dataset.f;$$('#flt button').forEach(x=>x.classList.toggle('on',x===b));render(...last)};
 const ph=['С чего начать читать Евангелие?','Как молиться?','Как простить обиду?','Что делать, если сомневаюсь в вере?','Как справиться с тревогой?','Как готовиться к исповеди?','Что такое Троица?','Как сохранить брак?','Как воспитывать детей?','Что значит Воскресение?','Грешно ли бояться смерти?'];let pi=0;
 setInterval(()=>{if(!$('#q').value)$('#q').placeholder=ph[++pi%ph.length]},3200);
