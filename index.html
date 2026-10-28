@@ -24,7 +24,7 @@ body.leaving #face,body.leaving #hint{opacity:0;transition:opacity .18s ease}
 #c{position:fixed;inset:0;width:100%;height:100%;z-index:1}
 body:not([data-v=home]) #c{display:none}
 #home.on{position:fixed;inset:0;z-index:2;pointer-events:none}
-#face{position:absolute;left:50%;top:50%;width:var(--fs);transform:translate(-50%,-50%);-webkit-mask-image:radial-gradient(circle,#000 52%,transparent 70%);mask-image:radial-gradient(circle,#000 52%,transparent 70%);animation:br 2.333s ease-in-out infinite;opacity:0;transition:opacity 3.2s ease,filter 1s}
+#face{position:absolute;left:50%;top:50%;width:var(--fs);transform:translate(-50%,-50%);-webkit-mask-image:radial-gradient(circle,#000 52%,transparent 70%);mask-image:radial-gradient(circle,#000 52%,transparent 70%);animation:br 7s ease-in-out infinite;opacity:0;transition:opacity 3.2s ease,filter 1s}
 body.ready #face{opacity:1}
 body.ready.leaving #face{opacity:0;transition:opacity .18s ease}
 body.menu #face{filter:brightness(1.18) contrast(1.05)}
@@ -235,6 +235,7 @@ a.br:hover,.rf:hover{color:#fff;border-bottom-color:#fff}
 .ans>small{color:var(--gold)}
 .ans .ai{color:#d6d2c8;margin:12px 0 4px;font-size:19px;line-height:1.5}
 .ans .an{color:var(--dim);font-size:15px;margin-bottom:6px}
+.ans blockquote.hd{font-size:28px;line-height:1.42;color:#fff;border-left:2px solid var(--gold)}
 .ans blockquote{margin:22px 0 0;padding:4px 0 4px 22px;font-size:23px;line-height:1.5;font-style:normal;color:#f3efe6;white-space:pre-line}
 .ans blockquote cite{font:11px/1.6 system-ui;letter-spacing:.12em;text-transform:uppercase;margin-top:12px;white-space:normal}
 .ans blockquote cite a{color:var(--gold);text-decoration:none;border-bottom:1px dotted rgba(255,227,163,.5)}
@@ -244,7 +245,35 @@ a.br:hover,.rf:hover{color:#fff;border-bottom-color:#fff}
 .ans .am a:hover{color:var(--gold)}
 .card.dm{cursor:default}.card.dm .cx{color:#e6e2d8}
 .card.dm cite a{color:var(--gold);text-decoration:none}
-@media(max-width:560px){.sp{font-size:20px}.ans{padding:20px 16px}.ans blockquote{font-size:20px;padding-left:14px}.sml a.it{flex-direction:column;gap:2px}.sml a.it em{text-align:left;white-space:normal}}
+@media(max-width:560px){.ans blockquote.hd{font-size:23px}.sp{font-size:20px}.ans{padding:20px 16px}.ans blockquote{font-size:20px;padding-left:14px}.sml a.it{flex-direction:column;gap:2px}.sml a.it em{text-align:left;white-space:normal}}
+
+/* Границы блоков: слова не выходят за рамки */
+body{overflow-wrap:anywhere}
+h1,h2,h3,h4,p,li,cite,small,em,blockquote,summary,option,.card,.ans,.azb,.live,.sp,.vs,.pf,.bt,.tx,.sdt,.sdx,.note,.lead,.nm a,.chips a,.chips button,.flt button,.chg a,.sml a.it,.bfoot a,.sdn a,.nxt,.nxt b{overflow-wrap:anywhere;word-break:normal;min-width:0;max-width:100%}
+h1,h2,h3,.bch{hyphens:auto;-webkit-hyphens:auto}
+.card,.ans,.azb,.live,.sp,.smb,.sml,.aud,.pf,.bible,.seek,.hero{min-width:0}
+.ans .am a,.card cite,.ans blockquote cite,.azb blockquote cite{white-space:normal}
+.sml a.it{flex-wrap:wrap}.sml a.it span{flex:1 1 55%}.sml a.it em{flex:0 1 auto;white-space:normal;max-width:100%}
+.chips,.flt,.nm,.chg,.bpick{max-width:100%}.chips a,.chips button,.flt button{white-space:normal;text-align:left}
+.bpick select{max-width:100%}.sb{max-width:100%}#q{min-width:0;width:100%}
+.sdn{flex-wrap:wrap}.sdn a{flex:1 1 40%}.sdn a:last-child{text-align:right}
+/* Живой анализ и ответы azbyka.ru */
+.live{margin:0 0 22px;padding:14px 18px;border:1px dotted #555;border-radius:6px;font-size:17px;line-height:1.45;color:var(--dim)}
+.live:empty{display:none}
+.live ol{list-style:none}.live li{display:flex;gap:12px;align-items:baseline;padding:4px 0}
+.live li i{flex:none;width:8px;height:8px;border-radius:50%;background:#555}
+.live li.run i{background:var(--gold);animation:pulse 1s infinite}.live li.done i{background:#9fd49a}.live li.off i{background:#c98}
+.live li span{flex:1 1 0}.live li b{color:#d6d2c8;font-weight:500}
+@keyframes pulse{50%{opacity:.25}}
+.azb{margin:0 0 34px;padding:26px 28px 22px;border:1px dotted #8a8a8a;border-radius:6px;background:rgba(255,255,255,.025);animation:up .6s both}
+.azb>small{color:#cfd8ff}.azb .ai{color:#d6d2c8;margin:12px 0 4px;font-size:19px;line-height:1.5}
+.azb .an{color:var(--dim);font-size:15px;margin-top:8px}
+.azb blockquote{margin:22px 0 0;padding:4px 0 4px 22px;font-size:21px;line-height:1.5;font-style:normal;color:#ece8df;border-left:2px dotted #8a8a8a;white-space:pre-line}
+.azb blockquote cite{font:11px/1.6 system-ui;letter-spacing:.1em;text-transform:uppercase;margin-top:12px;color:var(--dim)}
+.azb blockquote cite b{color:#cfd8ff;font-weight:500}.azb cite a{color:var(--gold);text-decoration:none;border-bottom:1px dotted rgba(255,227,163,.5)}
+.azb .go{display:inline-block;margin-top:14px;color:var(--gold);text-decoration:none;border-bottom:1px dotted rgba(255,227,163,.5)}
+.pr em{white-space:normal;flex:0 1 auto;max-width:48%}
+@media(max-width:560px){.azb{padding:20px 16px}.azb blockquote{font-size:19px;padding-left:14px}.live{padding:12px 14px}}
 </style>
 </head>
 <body data-v="home">
@@ -288,7 +317,7 @@ a.br:hover,.rf:hover{color:#fff;border-bottom-color:#fff}
     <div class="sb"><input id="q" type="search" autocomplete="off" placeholder="Что вы ищете?" aria-label="Поиск"><button id="go" aria-label="Искать">→</button></div>
     <div class="chips" id="chips"></div>
     <div class="flt ui" id="flt"></div>
-    <div id="ans"></div><div class="meta" id="meta"></div><div id="res"></div>
+    <div id="live" class="live" aria-live="polite"></div><div id="ans"></div><div id="az"></div><div class="meta" id="meta"></div><div id="res"></div>
     <p class="note" style="padding-top:40px">Материалы справочные. За личным ответом обратитесь к священнику.<br>Слова Аввы Дорофея приведены по книге «Душеполезные поучения», слова Иоанна Златоуста — по «Симфонии по творениям свт. Иоанна Златоуста».<br>Выдержки из проповедей протоиерея Димитрия Смирнова приведены дословно по изданию «Проповеди» (книги 1–3); каждая выдержка ведёт к полному тексту проповеди.</p>
   </div>
 </section>
@@ -596,7 +625,7 @@ function bibleIndex(){bNav=null;
   $('#bh').innerHTML=`<small class="ui">Священное Писание · Синодальный перевод</small><h1>Библия</h1><div class="dots"></div><p class="lead">Шестьдесят шесть книг, от Бытия до Откровения. Выберите книгу, чтобы читать её здесь.</p>`;
   const st=[['Евангелие от Матфея','#bible/matt/1'],['Нагорная проповедь','#bible/matt/5'],['Отче наш','#bible/matt/6/9-13']];
   $('#bb').innerHTML=`<h4 class="ui">С чего начать</h4><div class="chips">${st.map(x=>`<a href="${x[1]}">${x[0]}</a>`).join('')}</div>`
-   +[['Ветхий Завет',0,39],['Новый Завет',39,66]].map(([t,a,z])=>`<section class="lib"><h2>${t}</h2><small class="ui">${z-a} книг</small>`
+   +[['Новый Завет',39,66],['Ветхий Завет',0,39]].map(([t,a,z])=>`<section class="lib"><h2>${t}</h2><small class="ui">${z-a} книг</small>`
      +BG.filter(g=>g[0]===t).map(g=>`<h4 class="ui">${g[1]}</h4><div class="nm">${BOOKS.slice(g[2],g[3]).map(b=>`<a href="${bhash(b[0],1)}">${b[1]}<em title="Глав: ${b[3]}">${b[3]}</em></a>`).join('')}</div>`).join('')+`</section>`).join('')
    +`<p class="note">Число рядом с названием — количество глав.</p>`}
 async function showBible(){const my=++bseq,p=location.hash.replace(/^#\/?/,'').split('/');
@@ -888,67 +917,151 @@ async function showSermon(){const p=location.hash.replace(/^#\/?/,'').split('/')
    непрерывный кусок абзаца, обрезанный только по границам предложений. */
 const SMN=5;
 function smSplit(t){return t.split(/(?<=[.!?…]["»)]?)\s+(?=["«(–—]?[А-ЯЁA-Z0-9])/)}
-function smExcerpt(t,qs){
-  if(t.length<=800)return{x:t,full:true};
-  const ss=smSplit(t),hit=ss.map(s=>{const w=new Set(toks(s).filter(a=>qs.some(q=>near(a,q))));return w.size*10+[...toks(s)].filter(a=>qs.some(q=>near(a,q))).length});
-  let best=-1,bi=0,bj=0;
-  for(let i=0;i<ss.length;i++){let L=0,sc=0;for(let j=i;j<ss.length;j++){L+=ss[j].length+1;if(L>760&&j>i)break;sc+=hit[j];
-    if(sc>best||(sc===best&&i<bi)){best=sc;bi=i;bj=j}}}
-  const x=ss.slice(bi,bj+1).join(' ');
-  return{x:(bi?'… ':'')+x+(bj<ss.length-1?' …':''),full:false}}
+/* тип вопроса определяет, какие по смыслу предложения лучше отвечают */
+const SMI=[
+ ['why','Почему',/(^|\s)(почему|зачем|отчего|для чего|из-за чего)(\s|$)/,/потому|поэтому|так как|\bибо\b|для того|чтобы|причин/g],
+ ['what','Что это',/(что такое|что значит|что означает|кто такой|кто такая|что есть|в чем смысл|что это)/,/(—|–|\sэто\s|называется|значит|означает|есть\s)/g],
+ ['can','Можно ли',/(можно ли|нужно ли|надо ли|должен ли|должна ли|грешно ли|грех ли|допустимо ли|обязательно ли|разрешено ли|позволительно ли|нельзя ли)/,/нельзя|можно|не следует|не должн|грех|запрещ|обязан|не надо|необходимо|должн|не позволя/g],
+ ['how','Как',/(^|\s)(как|что делать|каким образом|как быть)(\s|$)/,/нужно|надо|следует|должн|старай|необходимо|прежде всего|во-первых|для этого|научи|начни|начина/g]];
+function smIntent(q){const n=norm(q);for(const[k,l,re,mk]of SMI)if(re.test(n))return{k,l,mk};return{k:'gen',l:'',mk:null}}
+/* лучший непрерывный кусок абзаца (1–3 предложения): считает охват слов вопроса, редкость слов и маркеры нужного типа ответа */
+function smWindow(t,qs,idf,mk,maxLen,avg){
+  const ss=smSplit(t),n=ss.length,info=ss.map(x=>{const tk=toks(x),m=new Map();
+    for(const q of qs){let b=0,c=0;for(const a of tk){const w=near(a,q);if(w){c++;if(w>b)b=w}}if(b)m.set(q,[b,c])}
+    return{m,k:mk?(norm(x).match(mk)||[]).length:0,a:/аминь|воскресе/.test(norm(x))?1:0}});
+  const sc=(i,j)=>{const cov=new Map();let k=0,L=0,ad=0;for(let u=i;u<=j;u++){L+=ss[u].length+1;k+=info[u].k;ad+=info[u].a;for(const[q,[b,c]]of info[u].m){const o=cov.get(q)||[0,0];cov.set(q,[Math.max(o[0],b),o[1]+c])}}
+    let s=0;for(const[q,[b,c]]of cov)s+=idf[q]*(b+.12*Math.min(c-1,3));
+    s+=Math.min(k,2)*.8*avg-(i?0:-.2*avg)-.25*avg*L/maxLen-1.2*avg*ad;return{s,cov,L}};
+  if(t.length<=maxLen+100){const r=sc(0,n-1);return{x:t,s:r.s,cov:new Set(r.cov.keys())}}
+  let best=null,bi=0,bj=0;
+  for(let i=0;i<n;i++)for(let j=i;j<n&&j<i+3;j++){const r=sc(i,j);if(r.L>maxLen&&j>i)break;if(!best||r.s>best.s){best=r;bi=i;bj=j}}
+  return{x:(bi?'… ':'')+ss.slice(bi,bj+1).join(' ')+(bj<n-1?' …':''),s:best.s,cov:new Set(best.cov.keys())}}
 async function smSearch(q){const qs=[...new Set(toks(q))];if(!qs.length||!await smLoad())return[];
-  const N=SM.rows.length,k1=1.2,b=.75,sc=new Map(),hit=new Map();
-  for(const t of qs)for(const[key,P]of SM.inv){const w=near(key,t);if(!w)continue;
+  const N=SM.rows.length,k1=1.2,b=.75,sc=new Map(),hit=new Map(),df={};
+  for(const t of qs){df[t]=new Set;for(const[key,P]of SM.inv){const w=near(key,t);if(!w)continue;
     const n=P.length/2,idf=Math.log(1+(N-n+.5)/(n+.5));
-    for(let j=0;j<P.length;j+=2){const c=P[j],tf=P[j+1];
+    for(let j=0;j<P.length;j+=2){const c=P[j],tf=P[j+1];df[t].add(c);
       sc.set(c,(sc.get(c)||0)+w*idf*tf*(k1+1)/(tf+k1*(1-b+b*SM.len[c]/SM.avg)));
-      let h=hit.get(c);if(!h)hit.set(c,h=new Set);h.add(t)}}
-  const all=[...sc].filter(([c])=>hit.get(c).size>=need(qs.length)).map(([c,s])=>[c,s*Math.pow(hit.get(c).size/qs.length,1.5)]).sort((x,y)=>y[1]-x[1]);
-  // разнообразие: не более одной выдержки из проповеди, пока есть другие проповеди; затем — вторая
+      let h=hit.get(c);if(!h)hit.set(c,h=new Set);h.add(t)}}}
+  const idf={};let avg=0;for(const t of qs){idf[t]=Math.log(1+(N-df[t].size+.5)/(df[t].size+.5));avg+=idf[t]}avg/=qs.length;
+  const all=[...sc].filter(([c])=>hit.get(c).size>=need(qs.length)).sort((x,y)=>y[1]-x[1]);
+  if(!all.length)return[];
+  const it=smIntent(q),top=all[0][1],cand=all.slice(0,90).map(([c,s])=>{const[di,pi]=SM.rows[c],w=smWindow(SM.docs[di].p[pi],qs,idf,it.mk,650,avg);
+    return{c,d:di,n:pi,x:w.x,cov:w.cov,s:w.s*Math.pow(w.cov.size/qs.length,2)+.15*avg*s/top,tot:all.length}}).sort((x,y)=>y.s-x.s);
   const per=new Map(),pick=[];
-  for(const pass of[1,2])for(const[c,s]of all){if(pick.length>=14)break;const[di,pi]=SM.rows[c];if(pick.some(z=>z.c===c))continue;
-    if((per.get(di)||0)>=pass)continue;per.set(di,(per.get(di)||0)+1);pick.push({c,s,d:di,n:pi})}
-  pick.sort((x,y)=>y.s-x.s);
-  return pick.map(z=>({...z,...smExcerpt(SM.docs[z.d].p[z.n],qs),tot:all.length}))}
+  for(const pass of[1,2])for(const z of cand){if(pick.length>=14)break;if(pick.includes(z)||(per.get(z.d)||0)>=pass)continue;per.set(z.d,(per.get(z.d)||0)+1);pick.push(z)}
+  // короткий ответ: самый подходящий кусок из лучшей выдержки (до ~380 знаков)
+  const h=pick[0],hw=smWindow(SM.docs[h.d].p[h.n],qs,idf,it.mk,380,avg);h.h=hw.x;
+  // какие слова вопроса вообще не встретились в выбранных выдержках
+  const got=new Set();pick.slice(0,SMN).forEach(z=>z.cov.forEach(t=>got.add(t)));
+  const words=(q.match(/[А-Яа-яЁё\-]+/g)||[]),miss=[];for(const w of words){const t=toks(w)[0];if(t&&qs.includes(t)&&!got.has(t)&&!miss.includes(w.toLowerCase()))miss.push(w.toLowerCase())}
+  pick.meta={it,miss};return pick}
 
 let SMR=[];
+const smPl=(n,a,b,c)=>n%10===1&&n%100!==11?a:n%10>=2&&n%10<=4&&(n%100<10||n%100>=20)?b:c;
 function ansHTML(q,qs){if(!SMR.length)return'';
-  const top=SMR.slice(0,SMN),ds=new Set(SMR.map(z=>z.d)),more=SMR.slice(SMN).filter((z,i,a)=>a.findIndex(y=>y.d===z.d)===i&&!top.some(y=>y.d===z.d)).slice(0,6);
+  const m=SMR.meta||{it:{k:'gen'},miss:[]},h=SMR[0],ds=new Set(SMR.map(z=>z.d)),rest=SMR.slice(1,SMN),
+    more=SMR.slice(SMN).filter((z,i,a)=>a.findIndex(y=>y.d===z.d)===i&&!SMR.slice(0,SMN).some(y=>y.d===z.d)).slice(0,6);
   const cite=z=>`<a href="${smHref(z.d,z.n)}" target="_blank" rel="noopener">Проповедь «${esc(smTitle(z.d))}»${smDate(z.d)?' · '+esc(smDate(z.d)):''} — читать полностью →</a>`;
-  return`<section class="ans" aria-label="Ответ из проповедей отца Димитрия"><small class="ui">Отвечает протоиерей Димитрий Смирнов</small>
-  <p class="ai">По вашему вопросу в проповедях отца Димитрия нашлось ${SMR[0].tot} мест в ${ds.size} ${ds.size%10===1&&ds.size%100!==11?'проповеди':'проповедях'}. Вот самые близкие.</p>
-  <p class="an">Выдержки приведены слово в слово. Подборку составил поиск, а не священник. Нажмите на название, чтобы прочитать проповедь целиком.</p>
-  ${top.map(z=>`<blockquote>${hl(esc(z.x),qs)}<cite>${cite(z)}</cite></blockquote>`).join('')}
-  ${more.length?`<p class="am ui">Ещё по теме: ${more.map(z=>`<a href="${smHref(z.d,z.n)}" target="_blank" rel="noopener">${esc(smTitle(z.d))}</a>`).join('')}</p>`:''}</section>`}
+  const lead={how:'Вы спрашиваете, как поступать. Сначала то, что отец Димитрий говорит об этом прямее всего.',why:'Вы спрашиваете о причине. Сначала место, где отец Димитрий объясняет, почему это так.',
+    what:'Вы спрашиваете, что это такое. Сначала то, как отец Димитрий это объясняет.',can:'Вы спрашиваете, как к этому относиться. Сначала то, что отец Димитрий говорит об этом прямее всего.',gen:'Сначала то, что отец Димитрий говорит по вашему вопросу прямее всего.'}[m.it.k];
+  return`<section class="ans" aria-label="Ответ из проповедей отца Димитрия"><small class="ui">Отвечает протоиерей Димитрий Смирнов${m.it.l?' · '+m.it.l:''}</small>
+  <p class="ai">${lead}</p>
+  <blockquote class="hd">${hl(esc(h.h||h.x),qs)}<cite>${cite(h)}</cite></blockquote>
+  ${m.miss.length?`<p class="an">В проповедях не нашлось слов: ${m.miss.map(w=>'«'+esc(w)+'»').join(', ')}. Ответ построен по остальным словам вопроса.</p>`:''}
+  ${rest.length?`<p class="ai" style="margin-top:26px">Что он ещё говорит об этом (${h.tot} ${smPl(h.tot,'место',  'места','мест')} в ${ds.size} ${smPl(ds.size,'проповеди','проповедях','проповедях')}):</p>
+  ${rest.map(z=>`<blockquote>${hl(esc(z.x),qs)}<cite>${cite(z)}</cite></blockquote>`).join('')}`:''}
+  ${more.length?`<p class="am ui">Ещё по теме: ${more.map(z=>`<a href="${smHref(z.d,z.n)}" target="_blank" rel="noopener">${esc(smTitle(z.d))}</a>`).join('')}</p>`:''}
+  <p class="an" style="margin-top:20px">Выдержки приведены слово в слово. Подборку составил поиск, а не священник; троеточие означает, что абзац продолжается. Нажмите на название, чтобы прочитать проповедь целиком.</p></section>`}
+
+/* ---------- Живой анализ и ответы людей с azbyka.ru ---------- */
+const AZ={base:'https://azbyka.ru/vopros/',
+  /* Браузер не даёт читать чужой сайт напрямую. Порядок попыток: свой ретранслятор (см. azbyka-relay-worker.js), прямой запрос, публичные ретрансляторы.
+     Чтобы отключить сторонние ретрансляторы, очистите список pub. */
+  own:'',pub:['https://api.allorigins.win/raw?url=','https://corsproxy.io/?url='],
+  ban:new Set('rules personal questions category page pered-tem-kak-zadat-vopros kak-pravilno-pisat-i-govorit karta-sajta tag tags author feed wp-json'.split(' ')),cache:new Map(),max:5};
+let AZR={q:'',st:'idle',items:[]},LV={q:'',sm:'idle'},azT=0,azCtl=null;
+async function azFetch(u,sig){if(AZ.cache.has(u))return AZ.cache.get(u);
+  const c=[];if(AZ.own)c.push(AZ.own+encodeURIComponent(u));c.push(u);AZ.pub.forEach(p=>c.push(p+encodeURIComponent(u)));
+  for(const x of c){try{const r=await fetch(x,{signal:sig});if(!r.ok)continue;const t=await r.text();if(t&&t.length>300){AZ.cache.set(u,t);return t}}catch(e){if(e.name==='AbortError')throw e}}
+  return null}
+const azClean=t=>t.replace(/Проголосовать за сообщение|Снять голос за сообщение/g,'').replace(/[ \t\u00a0]+/g,' ').replace(/\s*\n\s*/g,'\n').trim();
+function azParse(html,u,t0){const d=new DOMParser().parseFromString(html,'text/html'),h=d.querySelector('h1'),title=((h&&h.textContent)||t0||'').trim().replace(/\s+/g,' '),ans=[],seen=new Set();
+  d.querySelectorAll('a[href*="/vopros/questions/profile/"]').forEach(a=>{const name=a.textContent.trim().replace(/\s+/g,' ');if(!name||seen.has(name))return;
+    let c=a,best=a.parentElement;
+    while(c.parentElement&&c.parentElement!==d.body){const p=c.parentElement,ns=new Set([...p.querySelectorAll('a[href*="/vopros/questions/profile/"]')].map(x=>x.textContent.trim()).filter(Boolean));if(ns.size>1)break;c=p;best=p}
+    if(!best)return;const ps=[...best.querySelectorAll('p,li,blockquote')].map(x=>azClean(x.textContent)).filter(x=>x&&x!==name);
+    let x=azClean((ps.length?ps.join('\n'):best.textContent.replace(name,'')));if(x.length>=40){seen.add(name);ans.push({a:name,x})}});
+  if(!ans.length){const m=d.querySelector('meta[property="og:description"]'),v=m&&m.getAttribute('content')||'',k=v.match(/^Отвечает ([^:]{3,60}):\s*([\s\S]+)$/);if(k)ans.push({a:k[1],x:k[2]})}
+  return{u,title,ans}}
+async function azSearch(q,sig){
+  const html=await azFetch(AZ.base+'?s='+encodeURIComponent(q.trim()),sig);if(!html)return{items:[],reached:false};
+  const d=new DOMParser().parseFromString(html,'text/html'),seen=new Set(),links=[];
+  d.querySelectorAll('a[href]').forEach(a=>{const m=(a.getAttribute('href')||'').match(/^(?:https?:\/\/(?:www\.)?azbyka\.ru)?\/vopros\/([a-z0-9\-]+)\/?$/i);if(!m||AZ.ban.has(m[1])||seen.has(m[1]))return;
+    const t=a.textContent.trim().replace(/\s+/g,' ');if(t.length<12)return;seen.add(m[1]);links.push({u:'https://azbyka.ru/vopros/'+m[1]+'/',t})});
+  const qs=[...new Set(toks(q))],it=smIntent(q),idf=Object.fromEntries(qs.map(t=>[t,1]));
+  const pages=await Promise.all(links.slice(0,AZ.max).map(async l=>{try{const h=await azFetch(l.u,sig);return h?azParse(h,l.u,l.t):null}catch(e){if(e.name==='AbortError')throw e;return null}}));
+  const items=[];
+  for(const p of pages){if(!p||!p.ans.length)continue;const tt=new Set(toks(p.title));let best=null;
+    for(const a of p.ans){const w=smWindow(a.x,qs,idf,it.mk,560,1),all=new Set([...w.cov,...qs.filter(t=>[...tt].some(x=>near(x,t)))]);
+      const sc=w.s*Math.pow(w.cov.size/qs.length,2)+.6*all.size/qs.length;if(all.size<Math.max(1,Math.ceil(qs.length/2)))continue;if(!best||sc>best.s)best={s:sc,a:a.a,x:w.x}}
+    if(best)items.push({u:p.u,t:p.title,a:best.a,x:best.x,s:best.s})}
+  items.sort((x,y)=>y.s-x.s);return{items:items.slice(0,6),reached:true}}
+function azKick(q,my,now){clearTimeout(azT);if(azCtl)azCtl.abort();AZR={q:q.trim(),st:q.trim()?'wait':'idle',items:[]};paintLive(q);paintAz(q);if(!q.trim())return;
+  azT=setTimeout(async()=>{if(my!==seq)return;AZR.st='run';paintLive(q);paintAz(q);azCtl=new AbortController();
+    try{const r=await azSearch(q,azCtl.signal);if(my!==seq)return;AZR.items=r.items;AZR.st=r.items.length?'ok':r.reached?'none':'off'}catch(e){if(my!==seq||e.name==='AbortError')return;AZR.st='off'}
+    paintLive(q);paintAz(q)},now?0:650)}
+const azLink=q=>AZ.base+'?s='+encodeURIComponent(q.trim());
+function paintLive(q){const el=$('#live');if(!el)return;q=(q||'').trim();
+  if(!q||!['all','dim','az'].includes(flt)||LV.q!==q){el.innerHTML='';return}
+  const it=smIntent(q),kw=(q.match(/[А-Яа-яЁё\-]+/g)||[]).filter(w=>toks(w).length),ds=new Set(SMR.map(z=>z.d)).size,
+    sm=LV.sm==='done'?'done':'run',az=AZR.st==='ok'||AZR.st==='none'?'done':AZR.st==='off'?'off':'run',fin=sm==='done'&&(az==='done'||az==='off');
+  const row=(c,t,x)=>`<li class="${c}"><i></i><span><b>${t}</b> ${x}</span></li>`,nA=AZR.items.length;
+  el.innerHTML='<ol>'+row('done','Разбираю вопрос:',`${it.l?'тип «'+esc(it.l)+'», ':''}ключевые слова: ${kw.length?esc(kw.join(', ')):'—'}`)
+   +row(sm,'Ищу в проповедях отца Димитрия:',sm==='done'?(SMR.length?`нашлось ${SMR[0].tot} мест в ${ds} ${smPl(ds,'проповеди','проповедях','проповедях')}`:'ничего не нашлось'):'идёт поиск…')
+   +row(az,'Ищу ответы людей на azbyka.ru:',AZR.st==='ok'?`найдено ответов: ${nA}`:AZR.st==='none'?'по этому вопросу ничего не нашлось':AZR.st==='off'?'сайт сейчас недоступен из браузера':'идёт поиск…')
+   +row(fin?'done':'run','Составляю ответ:',fin?(SMR.length||nA?`${SMR.length?Math.min(SMR.length,SMN)+' '+smPl(Math.min(SMR.length,SMN),'выдержка','выдержки','выдержек')+' отца Димитрия':''}${SMR.length&&nA?' и ':''}${nA?nA+' '+smPl(nA,'ответ','ответа','ответов')+' с azbyka.ru':''}`:'нечего собрать, попробуйте другими словами'):'собираю из найденного…')+'</ol>'}
+function paintAz(q,qs){const el=$('#az');if(!el)return;q=(q||'').trim();
+  if(!q||!['all','az'].includes(flt)||AZR.q!==q||AZR.st==='idle'){el.innerHTML='';return}
+  qs=qs||[...new Set(toks(q))];const head='<small class="ui">Ответы людей · Азбука веры (azbyka.ru)</small>';
+  if(AZR.st==='wait'||AZR.st==='run'){el.innerHTML=`<section class="azb">${head}<p class="ai">Ищу на azbyka.ru ответы священников и мирян на ваш вопрос…</p></section>`;return}
+  if(AZR.st==='off'){el.innerHTML=`<section class="azb">${head}<p class="ai">Прямо сейчас получить ответы с azbyka.ru не удалось: браузер или сеть не пропустили запрос.</p><a class="go" href="${azLink(q)}" target="_blank" rel="noopener">Искать этот вопрос на azbyka.ru →</a></section>`;return}
+  if(AZR.st==='none'){el.innerHTML=`<section class="azb">${head}<p class="ai">На azbyka.ru нет ответов, близких к этому вопросу.</p><a class="go" href="${azLink(q)}" target="_blank" rel="noopener">Искать на azbyka.ru самостоятельно →</a></section>`;return}
+  const L=flt==='az'?AZR.items:AZR.items.slice(0,3);
+  el.innerHTML=`<section class="azb">${head}<p class="ai">Так на этот вопрос отвечают священники и миряне на сайте «Азбука веры». Выбраны ответы, ближайшие к вашему вопросу.</p>
+  ${L.map(z=>`<blockquote>${hl(esc(z.x),qs)}<cite><b>${esc(z.a)}</b> · вопрос «${esc(z.t)}» — <a href="${esc(z.u)}" target="_blank" rel="noopener">читать полностью на azbyka.ru →</a></cite></blockquote>`).join('')}
+  <p class="an">Фрагменты приведены дословно с сайта azbyka.ru, права на тексты принадлежат авторам и порталу. Это ответы отдельных людей, а не официальная позиция Церкви; за личным ответом обратитесь к священнику.</p>
+  <a class="go" href="${azLink(q)}" target="_blank" rel="noopener">Все ответы по запросу на azbyka.ru →</a></section>`}
 function render(list,q){last=[list,q];const qs=[...new Set(toks(q))];
   const dim=flt==='dim',L=dim?SMR.slice(SMN).map(z=>({k:'dim',x:z.x,d:z.d,n:z.n,_z:1})):list.filter(e=>flt==='all'||e.k===flt);shown=L.map(e=>({...e,_q:qs}));
-  $('#ans').innerHTML=(flt==='all'||dim)?ansHTML(q,qs):'';
+  $('#ans').innerHTML=(flt==='all'||dim)?ansHTML(q,qs):'';paintLive(q);paintAz(q,qs);
   $('#meta').textContent=dim?(SMR.length?`Найдено в проповедях: ${SMR[0].tot}`:''):!q.trim()?'Частые вопросы':L.length?`Найдено: ${L.length}`:'';
   $('#res').innerHTML=L.length?L.map((e,i)=>{
     if(e.k==='dim')return`<article class="card dm" data-i="${i}" style="animation-delay:${i*50}ms"><div class="cm ui"><span>${LBL.dim}</span></div><h3>${esc(smTitle(e.d))}</h3><p class="cx">${hl(esc(e.x),qs)}</p><cite><a href="${smHref(e.d,e.n)}" target="_blank" rel="noopener">${esc(smDate(e.d)||'Проповедь')} — читать полностью →</a></cite></article>`;
     const head=ttl(e,q),sub=e.k==='gospel'?(q.trim()?[e.b,e.l].filter(Boolean).join(' · '):''):e.k==='fathers'&&q.trim()?[e.b,e.l].filter(Boolean).join(' · '):e.l;
     return`<article class="card" data-i="${i}" tabindex="0" style="animation-delay:${i*50}ms"><div class="cm ui"><span>${LBL[e.k]}</span>${e.p?`<span>${PL[e.p]}</span>`:''}</div><h3>${lk(esc(head))}</h3><p class="cx">${hl(lk(esc(snip(e.x,qs))),qs)}</p>${sub?`<cite>${lk(esc(sub))}</cite>`:''}${e.x.length>360?'<span class="tog ui">Показать полностью</span>':''}</article>`}).join('')
-   :dim&&SMR.length?'':`<div class="card"><h3>${dim&&!q.trim()?'Задайте вопрос выше':'Пока ничего не нашлось'}</h3><p>Попробуйте другими словами или спросите священника: иногда самый короткий путь — живой разговор.</p></div>`}
-async function search(v){const my=++seq,q=v.trim();
-  if(!q){SMR=[];return render(LOCAL.filter(e=>e.k==='faq').slice(0,6),'')}
+   :(dim&&SMR.length)||(flt==='az'&&q.trim())?'':`<div class="card"><h3>${dim&&!q.trim()?'Задайте вопрос выше':'Пока ничего не нашлось'}</h3><p>Попробуйте другими словами или спросите священника: иногда самый короткий путь — живой разговор.</p></div>`}
+async function search(v,now){const my=++seq,q=v.trim();
+  if(!q){SMR=[];LV={q:'',sm:'idle'};azKick('',my,1);return render(LOCAL.filter(e=>e.k==='faq').slice(0,6),'')}
+  LV={q,sm:'run'};paintLive(q);azKick(q,my,now);
   const loc=localSearch(q);let rem=[],emb=[];
   if(!EB.rows)$('#meta').textContent='Ищем в библиотеке…';
   emb=await ebSearch(q).catch(()=>[]);const smr=await smSearch(q).catch(()=>[]);
   if(KB.state==='on'){$('#meta').textContent='Ищем в базе знаний…';try{rem=await remote(q)}catch(e){rem=[]}}
-  if(my!==seq)return;SMR=smr;
+  if(my!==seq)return;SMR=smr;LV.sm='done';
   const by=k=>loc.filter(e=>e.k===k);
   render(rem.length?[...rem,...emb.slice(0,8),...by('faq').slice(0,2)]
     :emb.length?[...by('gospel').slice(0,4),...emb.slice(0,12),...by('fathers').slice(0,2),...by('faq').slice(0,2)]
     :loc,q)}
 let tmr;$('#q').addEventListener('input',e=>{clearTimeout(tmr);tmr=setTimeout(()=>search(e.target.value),250)});
-$('#q').addEventListener('keydown',e=>{if(e.key==='Enter'){clearTimeout(tmr);search(e.target.value)}});
-$('#go').onclick=()=>search($('#q').value);
+$('#q').addEventListener('keydown',e=>{if(e.key==='Enter'){clearTimeout(tmr);search(e.target.value,1)}});
+$('#go').onclick=()=>search($('#q').value,1);
 $('#res').addEventListener('click',e=>{if(e.target.closest('a'))return;const c=e.target.closest('.card[data-i]');if(!c)return;const it=shown[+c.dataset.i];if(!it||it.k==='dim'||it.x.length<=360)return;
   const open=c.classList.toggle('open');c.querySelector('.cx').innerHTML=hl(lk(esc(open?it.x:snip(it.x,it._q))),it._q);c.querySelector('.tog').textContent=open?'Свернуть':'Показать полностью'});
 $('#res').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.classList.contains('card'))e.target.click()});
 $('#chips').innerHTML=['Как молиться','Прощение','Сомнения','Тревога','Исповедь','Брак','Воспитание детей','Воскресение'].map(c=>`<button>${c}</button>`).join('');
 $('#chips').onclick=e=>{if(e.target.tagName==='BUTTON'){$('#q').value=e.target.textContent;search($('#q').value)}};
-$('#flt').innerHTML=[['all','Всё'],['gospel','Евангелие'],['fathers','Святые отцы'],['dim','Отец Димитрий'],['faq','Справка']].map(([k,t])=>`<button data-f="${k}" class="${k==='all'?'on':''}">${t}</button>`).join('');
+$('#flt').innerHTML=[['all','Всё'],['gospel','Евангелие'],['fathers','Святые отцы'],['dim','Отец Димитрий'],['az','Азбука веры'],['faq','Справка']].map(([k,t])=>`<button data-f="${k}" class="${k==='all'?'on':''}">${t}</button>`).join('');
 $('#flt').onclick=e=>{const b=e.target.closest('button');if(!b)return;flt=b.dataset.f;$$('#flt button').forEach(x=>x.classList.toggle('on',x===b));render(...last)};
 const ph=['С чего начать читать Евангелие?','Как молиться?','Что такое Троица?','Как простить обиду?','Как воспитывать детей?','Грешно ли бояться смерти?'];let pi=0;
 setInterval(()=>{if(document.activeElement!==$('#q'))$('#q').placeholder=ph[++pi%ph.length]},3200);
